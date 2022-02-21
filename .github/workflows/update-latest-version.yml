@@ -1,0 +1,32 @@
+name: Update latest version
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 8 * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+      - name: Install dependencies
+        run: pip install -r ${GITHUB_WORKSPACE}/requirements.txt
+      - name: Obtain latest version
+        run: echo "::set-output name=version::$(python latest-version.py)"
+        id: latest_version
+      - name: Update latest version
+        run: sed -i 's/ENV VERSION .*/ENV VERSION ${{ steps.latest_version.outputs.version }}/g' ${GITHUB_WORKSPACE}/Dockerfile
+      - name: Commit and tag changes
+        run: |
+          git config --global user.name "${{ secrets.USER_NAME }}"
+          git config --global user.email "${{ secrets.USER_EMAIL }}"
+          git remote set-url origin https://x-access-token:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/${GITHUB_REPOSITORY}
+          if ! git diff --exit-code; then
+            git commit -a -m "Update version to v${{ steps.latest_version.outputs.version }}"
+            git tag v${{ steps.latest_version.outputs.version }} 
+            git push --atomic origin ${GITHUB_REF##*/} v${{ steps.latest_version.outputs.version }} --tags 
+          fi
