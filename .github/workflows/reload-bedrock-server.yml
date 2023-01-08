@@ -1,0 +1,19 @@
+name: Reload Bedrock server
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: [Build Docker image]
+    types:
+      - completed
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Reload Bedrock server
+        uses: distributhor/workflow-webhook@v2
+        env:
+          webhook_url: ${{ secrets.WEBHOOK_URL }}
+          webhook_secret: ${{ secrets.WEBHOOK_SECRET }}
