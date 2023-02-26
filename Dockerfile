@@ -1,6 +1,6 @@
 FROM ubuntu:18.04
 
-ENV VERSION 1.19.62.01
+ENV VERSION 1.19.63.01
 
 RUN apt-get update \
   && apt-get install -y unzip curl libcurl4 libssl1.0.0 \
