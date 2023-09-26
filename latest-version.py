@@ -3,7 +3,12 @@ import urllib.request as ulr
 from bs4 import BeautifulSoup as bs
 
 def main():
-  html = ulr.urlopen('https://minecraft.wiki/w/Bedrock_Dedicated_Server').read()
+  html = ulr.urlopen(
+           ulr.Request(
+             'https://minecraft.wiki/w/Bedrock_Dedicated_Server',
+             headers={'User-Agent': 'Mozilla'}
+           )
+         ).read()
 
   index = -1
   while True:
