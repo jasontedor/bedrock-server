@@ -1,6 +1,6 @@
 FROM ubuntu:22.04
 
-ENV VERSION 1.20.40.01
+ENV VERSION 1.20.41.02
 
 RUN apt-get update \
   && apt-get install -y unzip curl libcurl4 libssl3 \
