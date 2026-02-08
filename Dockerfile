@@ -10,6 +10,9 @@ RUN apt-get update \
 
 RUN chmod +x /bedrock-server/bedrock_server
 
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
 WORKDIR /bedrock-server
 ENV LD_LIBRARY_PATH=.
-CMD [ "/bedrock-server/bedrock_server" ]
+ENTRYPOINT [ "/entrypoint.sh" ]
