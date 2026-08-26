@@ -10,7 +10,7 @@ def main():
            )
          ).read()
 
-  table = bs(html, 'html.parser').find("h3", {"id":"Release_versions"}).find_next("table")
+  table = bs(html, 'html.parser').find("h4", {"id":"Release_versions"}).find_next("table")
   a_tag = table.find_all("tr")[-1].find("a", string="Linux")
 
   version = re.compile('.*bedrock-server-(.*).zip').match(a_tag['href']).group(1)
