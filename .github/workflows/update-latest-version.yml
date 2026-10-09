@@ -16,7 +16,13 @@ jobs:
       - name: Install dependencies
         run: pip install -r ${GITHUB_WORKSPACE}/requirements.txt
       - name: Obtain latest version
-        run: echo "version=$(python latest-version.py)" >> $GITHUB_OUTPUT
+        run: |
+          version=$(python latest-version.py)
+          if ! [[ "$version" =~ ^[0-9]+(\.[0-9]+)+$ ]]; then
+            echo "Invalid version: '$version'" >&2
+            exit 1
+          fi
+          echo "version=$version" >> $GITHUB_OUTPUT
         id: latest_version
       - name: Update latest version
         run: sed -i 's/ENV VERSION .*/ENV VERSION ${{ steps.latest_version.outputs.version }}/g' ${GITHUB_WORKSPACE}/Dockerfile
